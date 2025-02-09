@@ -26,25 +26,20 @@ public class JwtInterceptor implements HandlerInterceptor {
     private UsersMapper usersMapper;
 
 
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
+
         String token = request.getHeader("Authorization");
         // 去掉Authorization前面的Bearer
         if (StrUtil.isNotBlank(token) && token.startsWith("Bearer ")) {
             token = token.substring(7);
         }
-
         if (StrUtil.isBlank(token)) {
             token = request.getParameter("Authorization");
         }
-        // 如果不是映射到方法直接通过 配合自定义注解使用
-        //if (handler instanceof HandlerMethod) {
-        //AuthAccess annotation = ((HandlerMethod) handler).getMethodAnnotation(AuthAccess.class);
-        //if (annotation != null) {
-        //return true;
-        //}
-        //}
         //3、如果请求头和参数里面都没有则抛出异常返回信息“请登录” 执行认证
         if (StrUtil.isBlank(token)) {
             throw new ServiceException("401", "请登录");

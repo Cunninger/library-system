@@ -38,4 +38,5 @@ public interface BorrowrecordsService{
     PageResult<Borrowrecords> selectPageByUserId(Integer userId, Integer page, Integer size);
 
 
+    PageResult<Borrowrecords> selectPage(Integer page, Integer size);
 }

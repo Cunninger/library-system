@@ -1,7 +1,9 @@
 package cn.yam.controller;
 
 import cn.yam.domain.Borrowrecords;
+import cn.yam.domain.Users;
 import cn.yam.service.BorrowrecordsService;
+import cn.yam.service.UsersService;
 import cn.yam.service.impl.BorrowrecordsServiceImpl;
 import cn.yam.vo.BorrowrecordsVo;
 import cn.yam.vo.PageResult;
@@ -12,12 +14,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * (borrowrecords)表控制层
  *
  * @author xxxxx
  */
+
 @RestController
 @RequestMapping("/borrowrecords")
 public class BorrowrecordsController {
@@ -26,7 +30,8 @@ public class BorrowrecordsController {
      */
     @Autowired
     private BorrowrecordsService borrowrecordsService;
-
+@Autowired
+private UsersService usersService;
     /**
      * 通过主键查询单条数据
      *
@@ -143,6 +148,31 @@ public class BorrowrecordsController {
     @GetMapping("selectPageByUserId")
     public PageResult<Borrowrecords> selectPageByUserId(@RequestParam Integer userId, @RequestParam Integer page, @RequestParam Integer size) {
         return borrowrecordsService.selectPageByUserId(userId, page, size);
+    }
+
+
+    @ApiOperation("分页查询借阅记录")
+    @GetMapping("selectPage")
+    public PageResult<Borrowrecords> selectPage(@RequestParam Integer page, @RequestParam Integer size) {
+        return borrowrecordsService.selectPage(page, size);
+    }
+    @ApiOperation("获取所有role为读者的借阅记录")
+    @GetMapping("selectAllReader")
+    public List<Borrowrecords> selectAllReader() {
+        // 获取所有用户
+        List<Users> users = usersService.selectAll();
+
+        // 筛选出角色为“读者”的用户ID
+        List<Integer> readerUserIds = users.stream()
+                .filter(user -> "reader".equals(user.getRole()))
+                .map(Users::getUserId)
+                .collect(Collectors.toList());
+        // 获取所有借阅记录
+        List<Borrowrecords> borrowrecords = borrowrecordsService.selectAll();
+        // 过滤出角色为“读者”的借阅记录
+        return borrowrecords.stream()
+                .filter(record -> readerUserIds.contains(record.getUserId()))
+                .collect(Collectors.toList());
     }
 
 }

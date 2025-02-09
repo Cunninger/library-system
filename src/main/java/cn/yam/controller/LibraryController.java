@@ -17,6 +17,7 @@ import java.util.List;
  *
  * @author xxxxx
  */
+
 @RestController
 @RequestMapping("/library")
 public class LibraryController {
@@ -42,8 +43,6 @@ public class LibraryController {
     @GetMapping("selectAll")
     public List<Library> selectAll() {
         return libraryService.selectAll();
-
-
     }
 
     /**

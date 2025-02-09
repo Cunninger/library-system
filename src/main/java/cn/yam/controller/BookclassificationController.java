@@ -22,6 +22,7 @@ import java.util.List;
  *
  * @author xxxxx
  */
+
 @RestController
 @RequestMapping("/bookclassification")
 
@@ -80,7 +81,7 @@ public class BookclassificationController {
         int i = bookclassificationService.updateByClassificationId(record);
         return ResultUtils.success(i);
     }
-
+    
 
     /**
      * 根据分类描述或者分类名 查询

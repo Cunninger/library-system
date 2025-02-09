@@ -20,6 +20,7 @@ import java.util.List;
  *
  * @author xxxxx
  */
+
 @RestController
 @RequestMapping("/books")
 public class BooksController {
@@ -121,6 +122,7 @@ public class BooksController {
     @ApiOperation("根据主键更新书籍状态")
     @PutMapping("updateStatusByBookId")
     public int updateStatusByBookId(@RequestBody StatusVo statusVo) {
+        System.out.println(statusVo);
         return booksService.updateStatusByBookId(statusVo);
     }
 

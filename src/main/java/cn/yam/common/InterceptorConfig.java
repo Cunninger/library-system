@@ -3,31 +3,24 @@ package cn.yam.common;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-
-/**
- * 功能：
- * 日期：2024/8/14 下午4:56
- */
 @Configuration
-public class InterceptorConfig extends WebMvcConfigurationSupport {
+public class InterceptorConfig implements WebMvcConfigurer {
+
     @Override
-    protected void addInterceptors(InterceptorRegistry registry) {
+    public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/users/login")
-                .excludePathPatterns("/users/register")
-                .excludePathPatterns("/v2/api-docs")
-                .excludePathPatterns("/swagger-ui/**")
-                .excludePathPatterns("/users/captcha");
-        super.addInterceptors(registry);
+                .excludePathPatterns("/users/login", "/users/register", "/v2/api-docs",
+                        "/swagger-ui/**", "/users/captcha","/swagger-resources/**",
+                        "/webjars/**", "/v2/**", "/swagger-ui.html/**",
+                        "/doc.html/**");
+        // No need to call super.addInterceptors(registry);
     }
 
     @Bean
     public JwtInterceptor jwtInterceptor() {
         return new JwtInterceptor();
     }
-
-
 }

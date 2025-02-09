@@ -12,6 +12,7 @@ import com.wf.captcha.GifCaptcha;
 import com.wf.captcha.utils.CaptchaUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.el.parser.Token;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/users")
+@Slf4j
 public class UsersController {
     /**
      * 服务对象
@@ -130,9 +132,11 @@ public class UsersController {
     @ApiOperation("注册")
     @PostMapping("register")
     public ApiResponse<Users> register(@RequestBody RegisterVo registerVo) {
+//        int a = 1/0;
         if (registerVo == null) {
             return new ApiResponse<>(400, "用户名或密码不能为空", null);
         }
+
         Users users = new Users();
         BeanUtils.copyProperties(registerVo, users);
         boolean success = usersService.insert(users) > 0;
@@ -141,6 +145,7 @@ public class UsersController {
         } else {
             return new ApiResponse<>(500, "注册失败", null);
         }
+
     }
 
     /**
@@ -194,6 +199,7 @@ public class UsersController {
     @ApiOperation("生成验证码")
     @GetMapping("/captcha")
     public void captcha(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
         // 创建GifCaptcha对象
         GifCaptcha gifCaptcha = new GifCaptcha(130, 48, 4);
         // 输出验证码图片
@@ -202,6 +208,8 @@ public class UsersController {
         String verCode = gifCaptcha.text().toLowerCase();
 
         captchaConfig.getCaptchaMap().put("CAPTCHA", verCode);
+//        log.info("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx验证码：{}xxxxxxxxxxx", verCode);
+//        throw new RuntimeException("Deliberate exception to trace the code flow");
     }
 
 

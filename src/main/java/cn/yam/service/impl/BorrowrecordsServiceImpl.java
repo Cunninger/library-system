@@ -86,6 +86,17 @@ public class BorrowrecordsServiceImpl implements BorrowrecordsService {
     public PageResult<Borrowrecords> selectPageByUserId(Integer userId, Integer page, Integer size) {
         PageHelper.startPage(page, size);
         // 查询
+        List<Borrowrecords> alllist = borrowrecordsMapper.selectAllByUserId(userId);
+        Page p = (Page) alllist;// 强转为Page类型
+        long total = p.getTotal();
+        List result = p.getResult();
+        return new PageResult<Borrowrecords>(total, result);
+    }
+
+    @Override
+    public PageResult<Borrowrecords> selectPage(Integer page, Integer size) {
+        PageHelper.startPage(page, size);
+        // 查询
         List<Borrowrecords> alllist = borrowrecordsMapper.selectAll();
         Page p = (Page) alllist;// 强转为Page类型
         long total = p.getTotal();
